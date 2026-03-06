@@ -85,6 +85,39 @@ class AudioAssistant(QMainWindow):
     def init_ui(self):
         central = QWidget()
         self.setCentralWidget(central)
+
+        # Set stylesheet for visibility on macOS
+        self.setStyleSheet("""
+            QMainWindow, QWidget {
+                background-color: white;
+                color: black;
+            }
+            QTextEdit {
+                background-color: white;
+                color: black;
+                border: 1px solid #ccc;
+            }
+            QPushButton {
+                background-color: #f0f0f0;
+                color: black;
+                border: 1px solid #999;
+                padding: 5px;
+                border-radius: 3px;
+            }
+            QPushButton:hover {
+                background-color: #e0e0e0;
+            }
+            QLabel {
+                color: black;
+            }
+            QComboBox {
+                background-color: white;
+                color: black;
+                border: 1px solid #999;
+                padding: 3px;
+            }
+        """)
+
         layout = QVBoxLayout(central)
 
         # Status

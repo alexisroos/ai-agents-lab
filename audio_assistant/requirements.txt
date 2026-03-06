@@ -1,0 +1,7 @@
+mlx-audio
+pyqt6
+sounddevice
+numpy
+pyperclip
+pyautogui
+pygetwindow

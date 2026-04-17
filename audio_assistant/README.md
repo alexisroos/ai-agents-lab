@@ -31,3 +31,8 @@ python main.py
 - Requires manual paste into ChatGPT web UI after copying prompt.
 - Only one auto-capture session at a time.
 - Mac M4 only.
+
+## Authors
+
+- Alexis Roos — Main Author
+- Claude Sonnet 4.5 — Co-Author

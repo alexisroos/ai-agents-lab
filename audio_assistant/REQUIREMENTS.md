@@ -319,4 +319,4 @@ pygetwindow       # Window management
 
 **Document Version**: 1.0
 **Last Updated**: 2026-03-05
-**Authors**: Alexis Roos, Claude Sonnet 4.5
+**Authors**: Alexis Roos (Main Author), Claude Sonnet 4.5

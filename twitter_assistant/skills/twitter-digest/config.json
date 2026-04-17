@@ -1,0 +1,12 @@
+{
+  "_readme": "Fill in these values before using the skill. Then rebuild the .skill bundle: cd skills && zip -r twitter-digest.skill twitter-digest/",
+  "recipient_email": "you@example.com",
+  "sender_account": "your-agent@gmail.com",
+  "notebooklm_account": "your-agent@gmail.com",
+  "workspace_root": "twitter_assistant",
+  "timezone": "America/Los_Angeles",
+  "alert_recipient_name": "YourName",
+  "cron_capture": "00:05",
+  "cron_digest": "06:30",
+  "cron_send": "07:00"
+}

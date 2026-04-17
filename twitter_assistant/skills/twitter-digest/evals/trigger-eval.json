@@ -1,0 +1,82 @@
+[
+  {
+    "query": "run twitter-capture for yesterday",
+    "should_trigger": true
+  },
+  {
+    "query": "i just woke up, can you run the full twitter digest and send me the email?",
+    "should_trigger": true
+  },
+  {
+    "query": "what did i miss on twitter yesterday? give me the highlights",
+    "should_trigger": true
+  },
+  {
+    "query": "did the capture cron run last night? how many tweets did we get?",
+    "should_trigger": true
+  },
+  {
+    "query": "compile the morning digest but don't send it yet, i want to review it first",
+    "should_trigger": true
+  },
+  {
+    "query": "send today's twitter digest email",
+    "should_trigger": true
+  },
+  {
+    "query": "the /twitter-capture job failed last night, can you run it manually now?",
+    "should_trigger": true
+  },
+  {
+    "query": "run /twitter-digest for 2026-03-08 and show me the top 10 tweets",
+    "should_trigger": true
+  },
+  {
+    "query": "check my twitter feed and summarize what's trending in my following list",
+    "should_trigger": true
+  },
+  {
+    "query": "the digest email wasn't sent this morning, can you retry?",
+    "should_trigger": true
+  },
+  {
+    "query": "hey can you summarize the news from my twitter following tab for march 8th?",
+    "should_trigger": true
+  },
+  {
+    "query": "write a python script that parses a json file and counts unique authors",
+    "should_trigger": false
+  },
+  {
+    "query": "set up a new gmail label for newsletters and filter all emails from substack into it",
+    "should_trigger": false
+  },
+  {
+    "query": "i want to scrape reddit posts from r/machinelearning and save them to a csv",
+    "should_trigger": false
+  },
+  {
+    "query": "can you write a cron expression that runs every weekday at 6:30am pacific time?",
+    "should_trigger": false
+  },
+  {
+    "query": "summarize this article for me: https://techcrunch.com/2026/03/08/openai-news",
+    "should_trigger": false
+  },
+  {
+    "query": "send an email to someone@example.com with the Q1 report attached",
+    "should_trigger": false
+  },
+  {
+    "query": "open notebooklm and create a notebook for my research papers",
+    "should_trigger": false
+  },
+  {
+    "query": "can you check if my openclaw cron jobs are running correctly?",
+    "should_trigger": false
+  },
+  {
+    "query": "i want to set up a daily newsletter digest from my email inbox, not twitter",
+    "should_trigger": false
+  }
+]

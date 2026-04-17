@@ -1,0 +1,6 @@
+{
+  "gmail_account": "your_gmail_account@example.com",
+  "digest_recipient": "recipient@example.com",
+  "subject_prefix": "Daily Twitter Highlights",
+  "recipient_name": "Your Name"
+}

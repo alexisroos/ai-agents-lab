@@ -1,0 +1,8 @@
+captures/
+reports/
+drafts/
+tmp/
+config/settings.json
+BACKUP/
+.claude/settings.json
+.claude/settings.local.json

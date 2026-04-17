@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash",
+      "Bash(openclaw *)",
+      "Bash(python3 *)",
+      "Bash(claude --version)",
+      "Bash(command -v claude)",
+      "Bash(node --version)",
+      "Bash(npm --version)",
+      "WebFetch(domain:github.com)",
+      "WebSearch"
+    ],
+    "additionalDirectories": [
+      "/Users/YOUR_USERNAME/.claude",
+      "/path/to/ai-agents-lab"
+    ]
+  }
+}

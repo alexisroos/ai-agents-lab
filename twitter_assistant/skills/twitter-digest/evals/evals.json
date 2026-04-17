@@ -1,0 +1,35 @@
+{
+  "skill_name": "twitter-digest",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Run twitter-capture for yesterday and tell me how many tweets were saved.",
+      "expected_output": "Executes /twitter-capture: navigates to Twitter Following tab, scrolls to collect yesterday's tweets (skipping GenAI-only links), saves captures/YYYY-MM-DD.json and captures/YYYY-MM-DD.meta.json, then reports tweets_found and tweets_scrolled from the meta file.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I just woke up — run the full Twitter digest for today and send me the email.",
+      "expected_output": "Executes all three steps in sequence: /twitter-capture (or loads existing capture if present), /twitter-digest (scores tweets, summarizes top-10 links via NotebookLM with LLM fallback, composes email), then /twitter-send (sends via gog gmail to {{config.recipient_email}}). Reports success or falls back to drafts/ on send failure.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "The capture already ran last night. Just compile the digest and save the email draft — don't send it yet.",
+      "expected_output": "Executes /twitter-digest only: loads captures/YYYY-MM-DD.json, scores tweets, summarizes linked articles, composes email from template, saves to reports/YYYY-MM-DD-email.txt. Does NOT execute /twitter-send.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "What did I miss on Twitter yesterday? Give me the highlights.",
+      "expected_output": "Runs /twitter-capture (or loads existing capture), then /twitter-digest to score and rank tweets. Presents top 10 tweets with engagement scores and any available link summaries. May optionally offer to send the digest email.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Did last night's Twitter capture run okay? How many tweets did we get?",
+      "expected_output": "Reads captures/YYYY-MM-DD.meta.json and reports: tweets_scrolled, tweets_in_window, tweets_skipped_genai, tweets_found, scroll_passes, and any errors from the meta file. Does not re-run the capture.",
+      "files": []
+    }
+  ]
+}

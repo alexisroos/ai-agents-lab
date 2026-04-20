@@ -30,9 +30,17 @@ Workspace root (relative to OpenClaw agent workspace): `{{config.workspace_root}
 
 ---
 
+## Browser tool rules (apply to ALL steps)
+
+**ONLY use `openclaw browser` CLI subcommands** (`navigate`, `snapshot`, `click`, `scroll`, `tabs`, etc.).
+**NEVER use `page.evaluate`, `page.evaluate_handle`, or any Playwright/CDP JavaScript injection.** These are not supported by the OpenClaw browser relay and will always fail.
+If you need data from the page, use `openclaw browser snapshot` to read the DOM, then extract what you need from the snapshot output.
+
+---
+
 ## Step 1 – Twitter Capture (`/twitter-capture`, 00:05 PT)
 
-Use the OpenClaw **browser tool** targeting the `user` profile (Chrome DevTools MCP existing-session).
+Use the OpenClaw **browser tool** (Chrome Relay — no Playwright).
 
 - Keep `chrome://inspect/#remote-debugging` open in Chrome and click **Allow remote debugging for this browser instance**. That tab must stay open; closing it drops the MCP session.
 - Before scrolling, run `openclaw browser --browser-profile user start` and confirm `running: true`.

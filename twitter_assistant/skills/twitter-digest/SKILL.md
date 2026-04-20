@@ -19,6 +19,8 @@ metadata: {"openclaw":{"requires":{"config":["browser.enabled"]},"emoji":"🐦"}
 
 Daily Twitter Following feed digest — capture, score, summarize, and email.
 
+> **Browser rule:** Use only `openclaw browser` CLI subcommands (`navigate`, `snapshot`, `click`, `scroll`). Never use `page.evaluate` or any Playwright/JavaScript injection — these are not supported and will fail.
+
 ## Overview
 
 Three sequential steps, each with its own slash command and cron schedule:

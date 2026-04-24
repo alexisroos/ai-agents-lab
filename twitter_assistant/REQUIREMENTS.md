@@ -7,7 +7,7 @@ Daily at 07:00 America/Los_Angeles, send an email digest covering every tweet th
 
 ## 0. Prerequisites
 - OpenClaw installed and running with `openclaw status` showing healthy.
-- Google Chrome 144+ with **Chrome DevTools MCP auto-connect** allowed (open `chrome://inspect/#remote-debugging`, click **Allow remote debugging for this browser instance**, and leave that tab open). Chrome must be logged into Twitter and Gmail as your agent account.
+- Google Chrome 144+ logged into Twitter and Gmail as your agent account, with remote debugging enabled (see §0a below).
 - OpenClaw browser tool enabled (`browser.enabled: true` in `~/.openclaw/openclaw.json`).
 - Gmail skill or `gog` CLI authenticated for your agent Gmail account.
 - Workspace: `twitter_assistant/` at the OpenClaw agent workspace root.
@@ -15,6 +15,64 @@ Daily at 07:00 America/Los_Angeles, send an email digest covering every tweet th
   - `twitter_assistant/reports/` — processed markdown + email drafts
   - `twitter_assistant/templates/email.md` — email template
   - `twitter_assistant/skills/twitter-digest/SKILL.md` — this skill
+
+---
+
+## 0a. Browser Auto-Start (macOS LaunchAgent)
+
+The cron jobs run unattended, so Chrome must start automatically at login with remote debugging enabled. A LaunchAgent handles this — without it you'll get repeated "allow remote debugging" prompts whenever Chrome restarts.
+
+**1. Find your node path**
+
+```bash
+which node || ls /opt/homebrew/opt/node@22/bin/node
+```
+
+Use the full path in the plist below (e.g. `/opt/homebrew/opt/node@22/bin/node`). Do not use `env node` — launchd's minimal PATH won't find it.
+
+**2. Create the plist**
+
+Save as `~/Library/LaunchAgents/ai.openclaw.browser.plist`:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>ai.openclaw.browser</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/opt/homebrew/opt/node@22/bin/node</string>
+    <string>/opt/homebrew/bin/openclaw</string>
+    <string>browser</string>
+    <string>start</string>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>/tmp/openclaw/browser-start.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/openclaw/browser-start.log</string>
+</dict>
+</plist>
+```
+
+Replace `/opt/homebrew/opt/node@22/bin/node` with the path from step 1 if different.
+
+**3. Load it**
+
+```bash
+launchctl load ~/Library/LaunchAgents/ai.openclaw.browser.plist
+```
+
+Verify with:
+
+```bash
+openclaw browser status   # should show running: true
+```
+
+Chrome will now start automatically at every login with remote debugging active. You no longer need to keep `chrome://inspect/#remote-debugging` open manually.
 
 ---
 

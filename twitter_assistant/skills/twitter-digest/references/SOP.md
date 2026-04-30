@@ -43,10 +43,10 @@ If you need data from the page, use `openclaw browser snapshot` to read the DOM,
 Use the OpenClaw **browser tool** (Chrome Relay — no Playwright).
 
 - Keep `chrome://inspect/#remote-debugging` open in Chrome and click **Allow remote debugging for this browser instance**. That tab must stay open; closing it drops the MCP session.
-- Before scrolling, run `openclaw browser --browser-profile user start` and confirm `running: true`.
+- Before scrolling, run `openclaw browser --browser-profile openclaw start` and confirm `running: true`.
 - Never launch a separate Chrome window — always reuse the signed-in session exposed via MCP.
 
-**If the MCP attach fails:** Reopen `chrome://inspect/#remote-debugging`, click **Allow remote debugging**, rerun `openclaw browser --browser-profile user start`, and only continue once `status` shows `running: true`.
+**If the MCP attach fails:** Reopen `chrome://inspect/#remote-debugging`, click **Allow remote debugging**, rerun `openclaw browser --browser-profile openclaw start`, and only continue once `status` shows `running: true`.
 
 1. Check if a Twitter tab is already open in the MCP session. If yes, reuse it. If no tabs exist, open `https://twitter.com/home` in a new tab (Twitter credentials live in the signed-in Chrome profile). Switch to the **Following** tab. Click the down arrow (⌄) next to "Following" and set **Sort by → Recent** to ensure chronological order.
 2. **Refresh the page** (reload `https://twitter.com/home`) and wait for it to fully load. This ensures the feed is not stale.
@@ -164,8 +164,8 @@ gog gmail send \
 |---|---|
 | Twitter unreachable | Log it; send abbreviated email noting the outage |
 | No tabs open in MCP session | Open `https://twitter.com/home` in a new tab within the existing Chrome window; proceed normally |
-| Chrome MCP attach disabled / connection refused | Reopen `chrome://inspect/#remote-debugging`, click **Allow remote debugging**, rerun `openclaw browser --browser-profile user start`. If it still fails, alert {{config.alert_recipient_name}} and abort. |
-| Chrome MCP session dropped mid-run | Re-enable remote debugging (see above) and rerun `openclaw browser --browser-profile user start`; if it still fails, log it and proceed with whatever was captured |
+| Chrome MCP attach disabled / connection refused | Reopen `chrome://inspect/#remote-debugging`, click **Allow remote debugging**, rerun `openclaw browser --browser-profile openclaw start`. If it still fails, alert {{config.alert_recipient_name}} and abort. |
+| Chrome MCP session dropped mid-run | Re-enable remote debugging (see above) and rerun `openclaw browser --browser-profile openclaw start`; if it still fails, log it and proceed with whatever was captured |
 | NotebookLM unavailable | Fall back to LLM summarization (Step 3b) |
 | LLM unavailable | OpenClaw failover handles automatically |
 | Gmail send fails | Save to `drafts/`; alert {{config.alert_recipient_name}} via Telegram |

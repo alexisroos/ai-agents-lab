@@ -24,4 +24,4 @@ Monorepo of OpenClaw-powered agentic assistants running on a local Mac mini.
 
 Each assistant has its own detailed CLAUDE.MD:
 - `twitter_assistant/CLAUDE.MD` - Daily Twitter digest pipeline
-- `audio_assistant/` - (needs CLAUDE.MD)
+- `audio_assistant/CLAUDE.MD` - Real-time speech transcription with ChatGPT integration

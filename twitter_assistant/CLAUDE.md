@@ -2,6 +2,10 @@
 
 Daily Twitter/X digest pipeline: capture → score → summarize → email.
 
+> **📋 Universal conventions:** See `../../CONVENTIONS.MD` for project-wide standards, Claude working guidelines, and task management practices.
+
+---
+
 ## How it works
 
 Three cron jobs run sequentially each day via OpenClaw native scheduling:

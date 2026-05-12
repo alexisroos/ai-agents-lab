@@ -23,10 +23,11 @@ Use the OpenClaw **browser tool** targeting the `user` profile (Chrome DevTools 
 1. With the `user` profile selected, open the browser tool and navigate to `https://twitter.com/home`. Switch to the **Following** tab.
 2. Target: **yesterday's calendar day** (00:00–23:59 America/Los_Angeles). Stop when tweet timestamps fall before that window.
 3. Scroll from newest to oldest. Track a running count of every tweet card visible on screen (including those outside the target date window). **Skip and do not save** any tweet where the only outbound URLs are GenAI media generators (e.g. `grok.com/imagine`, `x.com/i/grok`, `labs.openai.com`, `imagine.meta.ai`, `bing.com/images/create`, or similar image/video generation tools) — these produce no summarizable article content. Count skipped tweets separately in `tweets_skipped_genai` in the meta file. For each tweet in the target day that passes the filter, record:
-   - `tweet_id`, `author_handle`, `author_name`, `timestamp_pt`, `full_text`
+   - `id` (tweet ID), `user.screen_name` (author_handle), `user.name` (author_name), `created_at` (as timestamp_pt), `text` (full_text)
    - Engagement: `replies`, `reposts`, `likes` (+ bookmarks/views if visible)
    - All outbound URLs (expand `t.co` → canonical URLs)
    - Media type indicator (image/video/poll) if present
+   - **permalink**: Construct as `https://x.com/${user.screen_name}/status/${id}` and include this field explicitly in the saved JSON object for reliable linking in reports and emails.
 4. Save tweets to `twitter_assistant/captures/YYYY-MM-DD.json` as a JSON array sorted newest-first. Include a `collected_at` timestamp.
 5. Save scroll metrics to `twitter_assistant/captures/YYYY-MM-DD.meta.json` with these fields:
    ```json
@@ -99,7 +100,7 @@ OpenClaw's model failover handles LLM unavailability in 3b automatically.
 
 1. Load `twitter_assistant/templates/email.md`. Populate:
    - `{{date}}` → e.g., `Saturday, March 7, 2026`
-   - `{{top_tweets}}` → markdown bullets: author, metrics, key insight/quote, permalink
+   - `{{top_tweets}}` → markdown bullets: author, metrics, key insight/quote, permalink. **CRITICAL: Always use the `permalink` field from the capture JSON object (format: `https://x.com/${user.screen_name}/status/${id}`). Never use placeholders like "someid", "tweet_id", or incomplete URLs. If the capture lacks a permalink field, construct it dynamically from the tweet's `id` and `user.screen_name` fields before generating the bullet list.
    - `{{link_summaries}}` → bullets from Step 3 output
 2. Save the composed email to `twitter_assistant/reports/YYYY-MM-DD-email.txt`.
 

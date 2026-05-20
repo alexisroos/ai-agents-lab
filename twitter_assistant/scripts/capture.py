@@ -5,7 +5,7 @@ Scrolls the browser, takes snapshots, parses tweets deterministically.
 No LLM loop needed — shell executes the scroll, Python parses the output.
 """
 import subprocess, re, json, sys, time
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 import zoneinfo
 
 PT = zoneinfo.ZoneInfo("America/Los_Angeles")
@@ -71,6 +71,58 @@ def click_following_tab(snap_text):
     return False
 
 
+def raw_ts_to_iso(raw_ts):
+    """Convert relative Twitter timestamp to approximate ISO string."""
+    now = datetime.now(timezone.utc)
+    s = raw_ts.lower().strip()
+    m = re.match(r'^(\d+)\s*minute[s]?\s*ago$', s)
+    if m:
+        return (now - timedelta(minutes=int(m.group(1)))).isoformat()
+    m = re.match(r'^(\d+)m$', s)
+    if m:
+        return (now - timedelta(minutes=int(m.group(1)))).isoformat()
+    m = re.match(r'^(\d+)\s*hour[s]?\s*ago$', s)
+    if m:
+        return (now - timedelta(hours=int(m.group(1)))).isoformat()
+    m = re.match(r'^(\d+)h$', s)
+    if m:
+        return (now - timedelta(hours=int(m.group(1)))).isoformat()
+    m = re.match(r'^(\d+)\s*day[s]?\s*ago$', s)
+    if m:
+        return (now - timedelta(days=int(m.group(1)))).isoformat()
+    m = re.match(r'^(\d+)d$', s)
+    if m:
+        return (now - timedelta(days=int(m.group(1)))).isoformat()
+    # "May 11", "Apr 30" etc — use noon PT of that date in current year
+    months = {"jan":1,"feb":2,"mar":3,"apr":4,"may":5,"jun":6,
+              "jul":7,"aug":8,"sep":9,"oct":10,"nov":11,"dec":12}
+    for mon, num in months.items():
+        m = re.search(rf'{mon}\w*\s+(\d+)', s)
+        if m:
+            try:
+                PT = zoneinfo.ZoneInfo("America/Los_Angeles")
+                d = datetime(now.year, num, int(m.group(1)), 12, 0, tzinfo=PT)
+                return d.isoformat()
+            except Exception:
+                pass
+    return now.isoformat()
+
+
+def extract_author_name(full_text, handle):
+    """Extract author display name from the full_text prefix."""
+    # full_text format: "Name [Verified account] @handle TIMESTAMP ..."
+    pattern = re.compile(r'^(.+?)\s+(?:Verified account\s+)?@' + re.escape(handle), re.IGNORECASE)
+    m = pattern.match(full_text)
+    if m:
+        name = m.group(1).strip()
+        # Remove trailing "reposted SomeName" prefix if present
+        rp = re.match(r'^.+?\s+reposted\s+(.+)$', name)
+        if rp:
+            name = rp.group(1).strip()
+        return name
+    return handle
+
+
 def parse_tweets(snap_text):
     """
     Extract tweets from a full accessibility-tree snapshot.
@@ -134,7 +186,9 @@ def parse_tweets(snap_text):
         tweet = {
             "tweet_id": tweet_id,
             "author_handle": author_handle,
+            "author_name": extract_author_name(full_text, author_handle),
             "raw_timestamp": raw_timestamp,
+            "timestamp_iso": raw_ts_to_iso(raw_timestamp),
             "full_text": full_text,
             "replies":   parse_num(replies_re.search(block)),
             "reposts":   parse_num(reposts_re.search(block)),
@@ -142,6 +196,7 @@ def parse_tweets(snap_text):
             "views":     parse_num(views_re.search(block)),
             "bookmarks": parse_num(bookmarks_re.search(block)),
             "permalink": permalink,
+            "urls": [],
         }
         tweets.append(tweet)
 

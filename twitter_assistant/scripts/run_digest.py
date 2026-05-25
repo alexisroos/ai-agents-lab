@@ -138,7 +138,20 @@ def main() -> None:
 
     # Sorts
     filtered_tweets.sort(key=lambda t: (t["score"], t["_dt_pt"]), reverse=True)
-    top_tweets = filtered_tweets[:10]
+
+    # Limit Elon Musk to his single top tweet
+    elon_handle = "elonmusk"
+    elon_tweets = [t for t in filtered_tweets if (t.get("author_handle") or "").lower() == elon_handle]
+    other_tweets = [t for t in filtered_tweets if (t.get("author_handle") or "").lower() != elon_handle]
+    if elon_tweets:
+        top_elon = [elon_tweets[0]]
+        remaining_slots = 9
+        top_tweets = top_elon + other_tweets[:remaining_slots]
+    else:
+        top_tweets = other_tweets[:10]
+
+    # Ensure we still have up to 10 and re-sort by original score for display stability
+    top_tweets.sort(key=lambda t: (t["score"], t["_dt_pt"]), reverse=True)
     raw_feed = sorted(filtered_tweets, key=lambda t: t["_dt_pt"])
 
     captured_at = meta.get("collected_at")

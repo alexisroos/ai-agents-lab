@@ -6,7 +6,6 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import textwrap
 from datetime import datetime
 from pathlib import Path
 from typing import List
@@ -75,13 +74,11 @@ def build_top_block(top_tweets: List[dict]) -> str:
     blocks = []
     for item in top_tweets:
         body = extract_tweet_body(item['text'], item['author_handle'])
-        # Wrap body at 80 chars for readable email lines
-        wrapped = textwrap.fill(body, width=80)
         block = (
             f"**@{item['author_handle']}**  "
             f"💬 {item['replies']:,} · 🔁 {item['reposts']:,} · ❤️ {item['likes']:,}  "
             f"_{item['posted_pt']}_\n"
-            f"{wrapped}\n"
+            f"{body}\n"
             f"{item['permalink']}"
         )
         blocks.append(block)

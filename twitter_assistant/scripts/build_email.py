@@ -65,8 +65,8 @@ def extract_tweet_body(text: str, handle: str) -> str:
     body = prefix_re.sub('', text, count=1)
     # Remove trailing engagement stats: "N replies, N reposts, N likes..."
     body = re.sub(r'\s*\d[\d,]*\s+repl(?:y|ies).*$', '', body, flags=re.IGNORECASE | re.DOTALL)
-    # Remove trailing media noise like "Embedded video", "Image", "Play Video"
-    body = re.sub(r'\s*(Embedded video[^"]*|Image|Play Video)\s*$', '', body, flags=re.IGNORECASE)
+    # Remove any remaining trailing media noise (Image, Embedded video, Play Video)
+    body = re.sub(r'(\s+(?:Image|Embedded video[\w\s:/]*|Play Video))+\s*$', '', body, flags=re.IGNORECASE)
     return body.strip() or text.strip()
 
 
@@ -74,11 +74,16 @@ def build_top_block(top_tweets: List[dict]) -> str:
     blocks = []
     for item in top_tweets:
         body = extract_tweet_body(item['text'], item['author_handle'])
+        photo_line = ""
+        if item.get('photo_urls'):
+            links = "  ".join(f"📷 {url}" for url in item['photo_urls'][:3])
+            photo_line = f"\n{links}"
         block = (
             f"**@{item['author_handle']}**  "
             f"💬 {item['replies']:,} · 🔁 {item['reposts']:,} · ❤️ {item['likes']:,}  "
             f"_{item['posted_pt']}_\n"
-            f"{body}\n"
+            f"{body}"
+            f"{photo_line}\n"
             f"{item['permalink']}"
         )
         blocks.append(block)

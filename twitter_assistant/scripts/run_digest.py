@@ -223,6 +223,7 @@ def main() -> None:
                 "posted_pt": tweet["_dt_pt"].strftime("%Y-%m-%d %I:%M %p PDT"),
                 "permalink": tweet["permalink"],
                 "urls": tweet.get("urls", []),
+                "photo_urls": tweet.get("photo_urls", []),
             }
             for idx, tweet in enumerate(top_tweets, start=1)
         ],

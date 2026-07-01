@@ -147,6 +147,8 @@ def parse_tweets(snap_text):
     ts_link_re  = re.compile(
         r'link "([^"]+)" \[ref=(e\d+)\][^\n]*\n\s*- /url: (/(\w+)/status/(\d+))(?![/\d])'
     )
+    # Photo links: /url: /user/status/ID/photo/N
+    photo_re = re.compile(r'/url: (/\w+/status/\d+/photo/\d+)')
 
     # Find all article positions
     article_matches = list(article_re.finditer(snap_text))
@@ -171,6 +173,16 @@ def parse_tweets(snap_text):
         author_handle = ts_match.group(4)
         tweet_id = ts_match.group(5)
 
+        # Extract photo URLs (deduplicated, only /photo/1 etc., not /analytics)
+        photo_urls = [f"https://x.com{p}" for p in dict.fromkeys(photo_re.findall(block))]
+
+        # Clean media/engagement noise from full_text tail
+        clean_full = re.sub(
+            r'\s*(?:Embedded video[\d\s:/]*|Play Video|Image\s*)*'
+            r'\s*\d[\d,]*\s+repl(?:y|ies).*$',
+            '', full_text, flags=re.IGNORECASE | re.DOTALL
+        ).strip()
+
         def parse_num(m):
             if not m:
                 return 0
@@ -186,10 +198,11 @@ def parse_tweets(snap_text):
         tweet = {
             "tweet_id": tweet_id,
             "author_handle": author_handle,
-            "author_name": extract_author_name(full_text, author_handle),
+            "author_name": extract_author_name(clean_full, author_handle),
             "raw_timestamp": raw_timestamp,
             "timestamp_iso": raw_ts_to_iso(raw_timestamp),
-            "full_text": full_text,
+            "full_text": clean_full,
+            "photo_urls": photo_urls,
             "replies":   parse_num(replies_re.search(block)),
             "reposts":   parse_num(reposts_re.search(block)),
             "likes":     parse_num(likes_re.search(block)),
